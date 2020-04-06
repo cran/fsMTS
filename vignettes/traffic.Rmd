@@ -69,8 +69,8 @@ plot(mMI.global, col=rev(heat.colors(10)), key=NULL,
 
 
 ```{r fsPSC}
-mPSC.global<-fsMTS(data, max.lag=max.lag,method="PSC",show.progress=show.progress, localized= FALSE)
-plot(mPSC.global, col=rev(heat.colors(10)), key=NULL, 
+mPSC<-fsMTS(data, max.lag=max.lag,method="PSC",show.progress=show.progress)
+plot(mPSC, col=rev(heat.colors(10)), key=NULL, 
      main="PSC-based feature selection")
 ```
 
@@ -82,7 +82,7 @@ mlist <- list(Independent = mIndep,
               LARS = mLARS,
               RF.global = mRF.global,
               MI.global = mMI.global,
-              PSC.global=mPSC.global)
+              PSC=mPSC)
 
 th<-0.1
 mE1 <- fsEnsemble(mlist, threshold = th, method="ranking")

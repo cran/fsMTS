@@ -98,11 +98,8 @@ plot(mMI.global, digits=2, col=rev(heat.colors(10)), key=NULL,
      main="Mutual information-based (global) feature selection")
 
 ## ----fsPSC--------------------------------------------------------------------
-mPSC.localized<-fsMTS(data, max.lag=max.lag,method="PSC",show.progress=show.progress, localized= TRUE)
-plot(mPSC.localized, digits=2, col=rev(heat.colors(10)), key=NULL, 
-     main="PSC-based (localized) feature selection")
-mPSC.global<-fsMTS(data, max.lag=max.lag,method="PSC",show.progress=show.progress, localized= FALSE)
-plot(mPSC.global, digits=2, col=rev(heat.colors(10)), key=NULL, 
+mPSC<-fsMTS(data, max.lag=max.lag,method="PSC",show.progress=show.progress)
+plot(mPSC, digits=2, col=rev(heat.colors(10)), key=NULL, 
      main="PSC-based (global) feature selection")
 
 ## ----fsEnsemble---------------------------------------------------------------
@@ -116,8 +113,7 @@ mlist <- list(Independent = mIndep,
               RF.global = mRF.global,
               MI.localized = mMI.localized,
               MI.global = mMI.global,
-              PSC.localized = mPSC.localized,
-              PSC.global=mPSC.global)
+              PSC=mPSC)
 
 th<-0.1
 mE1 <- fsEnsemble(mlist, threshold = th, method="ranking")

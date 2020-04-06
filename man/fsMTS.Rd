@@ -50,12 +50,14 @@ See Pavlyuk (2020) for more details}
  and all other components and their lags.
  The method is localized - the least angle regression is independently estimated for every MTS
  component and lags (1:_max.lag_) of all other components.}
+ \item{\strong{"PSC"}}{ - feature selection using partial spectral coherence of MTS components.
+ The method returns maximal values of the partial spectral coherence function for all MTS lags}
 }}
 
 \item{show.progress}{the logical parameter to print progress of calculation.  By default is FALSE.}
 
 \item{localized}{the logical parameter to executed localized (component-wise) feature selection
-if the selected method supports this ("MI", "GLASSO", "PSC", "RF"). Localized versions of algorithms are based on selection
+if the selected method supports this ("MI", "GLASSO", "RF"). Localized versions of algorithms are based on selection
 of features for independently for every MTS component from all lagged components. Non-localised versions include
 simulteneous feature selection for all components, including potential instantaneous effects
 (relationships between feature within the same lag). Leter, non-localised algortihms ignore instantaneous effects and return only

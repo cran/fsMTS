@@ -61,15 +61,11 @@ fsEnsemble <- function(feature.sets, threshold, method=c("ranking", "majority"))
   method <- match.arg(method)
   result<-switch(method,
     ranking={
-      res <- NULL
+      lranks<-list()
       for (m in feature.sets){
-        mtmp<-rankElements(m)
-        if (is.null(res)){
-          res <- mtmp
-        } else{
-          res <- res + mtmp
-        }
+        lranks[[length(lranks)+1]]<-rankElements(m)
       }
+      res<-apply(simplify2array(lranks),1:2, stats::median)
       res <- cutoff(max(res)-res, threshold)
       res
     },
@@ -173,12 +169,13 @@ fsSparsity <- function(feature.set){
 #' @param method a similarity metric.
 #' Implemented metrics:
 #' \itemize{
-#'  \item{\strong{"intersection"}}{ - a share of matching features to maximal possible number of matching features}
-#'  \item{\strong{"Kuncheva"}}{ - Kuncheva-like correction to the expected number of features matched by chance. See Kuncheva (2007)
-#'  }
+#'  \item{\strong{"Jaccard"}}{ - a share of matching features to maximal possible number of matching features (Jaccard similarity)}
+#'  \item{\strong{"Kuncheva"}}{ - Kuncheva-like correction to the expected number of features matched by chance. See Kuncheva (2007)}
+#'  \item{\strong{"Hamming"}}{ - Hamming distance, normalised to [0,1], where 1 is for identical matrices}
 #' }
 #'
-#' @return returns a value from the [0,1] interval, where 1 is for absolutely identical feature sets.
+#' @return returns a value from the [-1, 1] interval for Kuncheva and from the [0,1] interval for other algorithms,
+#' where 1 is for absolutely identical feature sets.
 #'
 #' @export
 #'
@@ -198,9 +195,10 @@ fsSparsity <- function(feature.set){
 #' mCCF<-fsMTS(data, max.lag=3, method="CCF")
 #' mLARS<-fsMTS(data, max.lag=3, method="LARS")
 #' fsSimilarity(mCCF, mLARS, cutoff=TRUE, threshold=0.2, method="Kuncheva")
-#' fsSimilarity(mCCF, mLARS, cutoff=TRUE, threshold=0.2, method="intersection")
+#' fsSimilarity(mCCF, mLARS, cutoff=TRUE, threshold=0.2, method="Jaccard")
+#' fsSimilarity(mCCF, mLARS, cutoff=TRUE, threshold=0.2, method="Hamming")
 #'
-fsSimilarity <- function(feature.set1, feature.set2, cutoff=FALSE, threshold=1, method = c("Kuncheva", "intersection")){
+fsSimilarity <- function(feature.set1, feature.set2, cutoff=FALSE, threshold=1, method = c("Kuncheva", "Jaccard", "Hamming")){
   method <- match.arg(method)
   if (cutoff){
     m1 <- cutoff(feature.set1,threshold)
@@ -216,7 +214,7 @@ fsSimilarity <- function(feature.set1, feature.set2, cutoff=FALSE, threshold=1, 
   res <- 0
   if (nrow(m1)==nrow(m2) && ncol(m1)==ncol(m2) ){
     res <- switch(method,
-                  intersection={
+                  Jaccard={
                     max.intersection <- min(sum(m1==1),sum(m2==1))
                     obs.intersection <- sum(m1+m2==2)
                     obs.intersection/max.intersection
@@ -230,7 +228,11 @@ fsSimilarity <- function(feature.set1, feature.set2, cutoff=FALSE, threshold=1, 
                     obs.intersection <- sum(m1+m2==2)
                     sim<-(obs.intersection - mean.intersection)/(max.intersection - mean.intersection)
                     # Scale to [0, 1]
-                    (sim - (-1))/(1 - (-1))
+                    # (sim - (-1))/(1 - (-1))
+                    sim
+                  },
+                  Hamming={
+                    sum(m1==m2)/(nrow(m1)*ncol(m1))
                   }
     )
   }else{
@@ -342,11 +344,12 @@ composeYX <- function(mts, i, max.lag){
 rankElements <-function(m){
   # Add small priority pieces to earlier lags and (after that) for first time series components
   m<-matrix(rank(m),ncol=ncol(m))
-  for (i in 1:nrow(m)){
-    for (j in 1:ncol(m)){
-      if (m[i,j]>0) m[i,j]<-m[i,j]-(i/1e+5)-(j/1e+7)
-    }
-  }
+  # for (i in 1:nrow(m)){
+  #   for (j in 1:ncol(m)){
+  #     if (m[i,j]>0) m[i,j]<-m[i,j]-(i/1e+5)-(j/1e+7)
+  #   }
+  # }
+  m<-ifelse(m>0,m-(row(m)/1e+5)-(col(m)/1e+7),0)
   max <- ncol(m)*nrow(m)
   res<-matrix(max-rank(m)+1, ncol=ncol(m))
   colnames(res) <- colnames(m)

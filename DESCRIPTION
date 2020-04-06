@@ -1,7 +1,7 @@
 Package: fsMTS
 Type: Package
 Title: Feature Selection for Multivariate Time Series
-Version: 0.1.4
+Version: 0.1.5
 Authors@R: person("Dmitry", "Pavlyuk", email = "Dmitry.Pavlyuk@tsi.lv",comment = c(ORCID = "0000-0003-3710-9678"), role = c("aut", "cre"))
 Description: Implements feature selection routines for multivariate time series (MTS). 
     The list of implemented algorithms includes: 
@@ -27,8 +27,8 @@ Author: Dmitry Pavlyuk [aut, cre] (<https://orcid.org/0000-0003-3710-9678>)
 Maintainer: Dmitry Pavlyuk <Dmitry.Pavlyuk@tsi.lv>
 Repository: CRAN
 Repository/R-Forge/Project: fsmts
-Repository/R-Forge/Revision: 14
-Repository/R-Forge/DateTimeStamp: 2020-03-25 12:58:38
-Date/Publication: 2020-03-25 15:10:05 UTC
+Repository/R-Forge/Revision: 17
+Repository/R-Forge/DateTimeStamp: 2020-04-06 12:28:39
+Date/Publication: 2020-04-06 14:42:13 UTC
 NeedsCompilation: no
-Packaged: 2020-03-25 13:11:34 UTC; rforge
+Packaged: 2020-04-06 12:50:57 UTC; rforge

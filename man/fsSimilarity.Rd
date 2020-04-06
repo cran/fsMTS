@@ -9,7 +9,7 @@ fsSimilarity(
   feature.set2,
   cutoff = FALSE,
   threshold = 1,
-  method = c("Kuncheva", "intersection")
+  method = c("Kuncheva", "Jaccard", "Hamming")
 )
 }
 \arguments{
@@ -25,13 +25,14 @@ By default is FALSE.}
 \item{method}{a similarity metric.
 Implemented metrics:
 \itemize{
- \item{\strong{"intersection"}}{ - a share of matching features to maximal possible number of matching features}
- \item{\strong{"Kuncheva"}}{ - Kuncheva-like correction to the expected number of features matched by chance. See Kuncheva (2007)
- }
+ \item{\strong{"Jaccard"}}{ - a share of matching features to maximal possible number of matching features (Jaccard similarity)}
+ \item{\strong{"Kuncheva"}}{ - Kuncheva-like correction to the expected number of features matched by chance. See Kuncheva (2007)}
+ \item{\strong{"Hamming"}}{ - Hamming distance, normalised to [0,1], where 1 is for identical matrices}
 }}
 }
 \value{
-returns a value from the [0,1] interval, where 1 is for absolutely identical feature sets.
+returns a value from the [-1, 1] interval for Kuncheva and from the [0,1] interval for other algorithms,
+where 1 is for absolutely identical feature sets.
 }
 \description{
 \code{fsSimilarity} implements different methods for calculation similarity of two feature sets.
@@ -48,7 +49,8 @@ data <- scale(traffic.mini$data[,-1])
 mCCF<-fsMTS(data, max.lag=3, method="CCF")
 mLARS<-fsMTS(data, max.lag=3, method="LARS")
 fsSimilarity(mCCF, mLARS, cutoff=TRUE, threshold=0.2, method="Kuncheva")
-fsSimilarity(mCCF, mLARS, cutoff=TRUE, threshold=0.2, method="intersection")
+fsSimilarity(mCCF, mLARS, cutoff=TRUE, threshold=0.2, method="Jaccard")
+fsSimilarity(mCCF, mLARS, cutoff=TRUE, threshold=0.2, method="Hamming")
 
 }
 \references{

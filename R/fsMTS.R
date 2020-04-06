@@ -40,9 +40,11 @@
 #'  and all other components and their lags.
 #'  The method is localized - the least angle regression is independently estimated for every MTS
 #'  component and lags (1:_max.lag_) of all other components.}
+#'  \item{\strong{"PSC"}}{ - feature selection using partial spectral coherence of MTS components.
+#'  The method returns maximal values of the partial spectral coherence function for all MTS lags}
 #' }
 #' @param localized the logical parameter to executed localized (component-wise) feature selection
-#' if the selected method supports this ("MI", "GLASSO", "PSC", "RF"). Localized versions of algorithms are based on selection
+#' if the selected method supports this ("MI", "GLASSO", "RF"). Localized versions of algorithms are based on selection
 #' of features for independently for every MTS component from all lagged components. Non-localised versions include
 #' simulteneous feature selection for all components, including potential instantaneous effects
 #' (relationships between feature within the same lag). Leter, non-localised algortihms ignore instantaneous effects and return only
@@ -155,7 +157,7 @@ fsMTS <- function(mts, max.lag, method=c("ownlags", "distance", "CCF","MI", "RF"
          CCF=fsCCF(mts, max.lag, show.progress=show.progress),
          MI=fsMI(mts, max.lag, show.progress=show.progress,localized=localized),
          RF=fsRF(mts, max.lag, show.progress=show.progress,localized=localized),
-         PSC=fsPSC(mts, max.lag, show.progress=show.progress,localized=localized),
+         PSC=fsPSC(mts, max.lag, show.progress=show.progress),
          GLASSO={
            if (is.null(opts$rho))
              stop('rho value is required for graphical LASSO')
