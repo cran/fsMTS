@@ -6,7 +6,7 @@ fsRF <- function(mts, max.lag, show.progress = TRUE, localized = FALSE) {
   if (localized){
     for (i in 1:k){
       dat <- composeYX(mts, i, max.lag)
-
+      dat <- stats::na.omit(dat)
       # rf <- randomForest::randomForest(dat[,-1],dat[,1],importance = T)
       # df <- as.data.frame(randomForest::importance(rf))
       # df<-df[df$`%IncMSE`>0,]
@@ -27,6 +27,7 @@ fsRF <- function(mts, max.lag, show.progress = TRUE, localized = FALSE) {
       colnames(ld)<-paste0(colnames(mts),".l",l)
       dat<-cbind(dat[-nrow(dat),], ld)
     }
+    dat <- stats::na.omit(dat)
     f<-paste0("Multivar(",paste0(colnames(mts),collapse = ","),") ~.")
     mv.obj <- randomForestSRC::rfsrc(stats::as.formula(f), data = as.data.frame(dat), importance = TRUE)
 

@@ -52,6 +52,7 @@ plot(shortest, digits=2, col=rev(heat.colors(10)), key=NULL,
      main="Shortest distances between nodes")
 
 data <- scale(data)
+data[5,]<-NA
 
 ## ----fsOwnlags----------------------------------------------------------------
 mIndep<-fsMTS(data, max.lag=max.lag, method="ownlags")
@@ -134,7 +135,8 @@ plot(msimilarity, digits=2, col=rev(heat.colors(ncol(msimilarity))), key=NULL,
      main="Pairwise comparison of feature sets", cex.axis=0.7)
 
 ## ----predict------------------------------------------------------------------
-model <- VAR(data, p=max.lag, include.mean = F, fixed = mE2)
+dat <- stats::na.omit(data)
+model <- VAR(dat, p=max.lag, include.mean = F, fixed = mE2)
 print(model$coef)
 VARpred(model,1)
 

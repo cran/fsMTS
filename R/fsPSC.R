@@ -32,6 +32,7 @@ fsPSC <- function(mts, max.lag,  show.progress = TRUE) {
   #   res<-getMaxPSC(dat)[-c(1:k),1:k]
   #   res <- fsNames(res, mts, max.lag)
   # }
+  mts<-stats::na.omit(mts)
   m<-getMaxPSC(mts)
   res<-matrix(0, k*max.lag, k)
   res <- fsNames(res, mts, max.lag)

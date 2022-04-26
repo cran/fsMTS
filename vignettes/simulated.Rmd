@@ -65,6 +65,7 @@ plot(shortest, digits=2, col=rev(heat.colors(10)), key=NULL,
      main="Shortest distances between nodes")
 
 data <- scale(data)
+data[5,]<-NA
 ```
 
 ```{r fsOwnlags}
@@ -162,7 +163,9 @@ plot(msimilarity, digits=2, col=rev(heat.colors(ncol(msimilarity))), key=NULL,
 
 Use obtained features for model estimation and prediction
 ```{r predict}
-model <- VAR(data, p=max.lag, include.mean = F, fixed = mE2)
+dat <- stats::na.omit(data)
+model <- VAR(dat, p=max.lag, include.mean = F, fixed = mE2)
 print(model$coef)
 VARpred(model,1)
 ```
+
